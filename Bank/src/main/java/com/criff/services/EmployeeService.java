@@ -10,7 +10,7 @@ import com.criff.models.User;
 import com.criff.repository.UserDaoImpl;
 import com.criff.utility.InputUtility;
 
-public class UserService {
+public class EmployeeService {
 	private static UserService userService = new UserService();
 	private static AdminMenu adminMenu = new AdminMenu();
 	private static EmpMenu empMenu = new EmpMenu();
@@ -76,13 +76,13 @@ public class UserService {
 		acctNumbers = user.getAcctNumbers();
 	}
 	
-	public void createUser() {
+	public void createEmployee() {
 		System.out.println("                                                   ");
 		System.out.println("                                                   ");
 		System.out.println("    	*******************************************");
 		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
 		System.out.println("        *                                         *");
-		System.out.println("        *       New User Account Sign Up!         *");
+		System.out.println("        *       New Employee Sign Up!             *");
 		System.out.println("    	*******************************************");
 		System.out.println("                                                   ");
 		System.out.print("         Please Enter Your First Name: ");
@@ -101,13 +101,13 @@ public class UserService {
 		newUser = true;
 	}
 	
-	public void userLogin() {
+	public void employeeLogin() {
 		System.out.println("                                                   ");
 		System.out.println("                                                   ");
 		System.out.println("    	*******************************************");
 		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
 		System.out.println("        *                                         *");
-		System.out.println("        *              User Login                 *");
+		System.out.println("        *            Employee Login               *");
 		System.out.println("    	*******************************************");
 		System.out.println("                                                   ");
 		
@@ -136,13 +136,13 @@ public class UserService {
 		
 	}
 	
-	public void logout() {
+	public void employeelogout() {
 		System.out.println("                                                   ");
 		System.out.println("                                                   ");
 		System.out.println("    	*******************************************");
 		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
 		System.out.println("        *                                         *");
-		System.out.println("        *              User Logout                *");
+		System.out.println("        *            Employee Logout              *");
 		System.out.println("    	*******************************************");
 		System.out.println("                                                   ");
 		
@@ -153,7 +153,7 @@ public class UserService {
         String choice = InputUtility.getStringInput(1);
         while (logIn == false) {
             if (choice.equals("1")) {
-                userLogin();
+                employeeLogin();
                 logIn = true;
             } else if (choice.equals("0")) {
                 logIn = false;
@@ -169,12 +169,10 @@ public class UserService {
 
     }
 	
-	public boolean displayAccts() {  
+	public boolean employeedisplayAccts() {  
 		boolean hasAccts = false;
 		hasAccts = userDao.getUserAccounts(user, hasAccts); 
 		return hasAccts;
 	}
+
 }
-
-
-

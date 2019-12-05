@@ -5,9 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.criff.models.Account;
 
-public class AccountsDao {
+public class AccountsDaoImpl implements AccountDao {
 	String url = "jdbc:postgresql://criffbanking.cua8a0jy3iil.us-east-2.rds.amazonaws.com/criffbanking";
 	String user = "postgres";
 	String pw = "lost1soul";
@@ -153,4 +156,14 @@ public class AccountsDao {
 			e.printStackTrace();
 		}
 	}
+
+	public void approveAccount(int acct_id, int userId) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void denyAccount(int acct_id, int userId) {
+		// TODO Auto-generated method stub
+		
+	}	   
 }

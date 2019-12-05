@@ -1,5 +1,7 @@
 package com.criff.driver;
 
+import com.criff.main.AdminMenu;
+import com.criff.main.EmpMenu;
 import com.criff.main.LoginMenu;
 import com.criff.main.UserMainMenu;
 import com.criff.utility.InputUtility;
@@ -34,8 +36,6 @@ public class Driver {
         InputUtility.displayHeader("STARTING SYSTEM....");
 		Menu menu = new LoginMenu();
 		do {
-			
-			
 			menu.showMenu();
 			menu.getUserInput();
 			menu = menu.process();
@@ -52,5 +52,32 @@ public class Driver {
 			menu.getUserInput();
 			menu = menu.process();
 		} while(menu!=null);
+		
+		System.out.println();
+		InputUtility.displayHeader("         Thank You For Banking With CRIFF BANKING! Have A Nice Day!!");
+	}
+	
+	public static void toAdminMainMenu() {
+		Menu menu = new AdminMenu();
+		do {
+			menu.showMenu();
+			menu.getUserInput();
+			menu = menu.process();
+		} while(menu!=null);
+		
+		System.out.println();
+		InputUtility.displayHeader("         Thank You For Banking With CRIFF BANKING! Have A Nice Day!!");
+	}
+	
+	public static void toEmpMainMenu() {
+		Menu menu = new EmpMenu();
+		do {
+			menu.showMenu();
+			menu.getUserInput();
+			menu = menu.process();
+		} while(menu!=null);
+		
+		System.out.println();
+		InputUtility.displayHeader("         Thank You For Banking With CRIFF BANKING! Have A Nice Day!!");
 	}
 }

@@ -1,13 +1,13 @@
 package com.criff.services;
 
 import com.criff.main.CurrencyMenu;
-import com.criff.repository.AccountsDao;
+import com.criff.repository.AccountsDaoImpl;
 import com.criff.models.Account;
 import com.criff.utility.InputUtility;
 
 public class AccountService {
 	public static Account acct = new Account();
-	private static AccountsDao acctDao = new AccountsDao();
+	private static AccountsDaoImpl acctDao = new AccountsDaoImpl();
 	private static UserService userService = new UserService();
 
 	public static Account getAccount() {
@@ -87,7 +87,7 @@ public class AccountService {
 		
 		System.out.println();
 		System.out.print("         Enter Amount To Be Deposited: ");
-		double amt = InputUtility.getDoubleInput(100_000);
+		double amt = InputUtility.getDoubleInput(500_000);
 		
 		acctDao.depositTo(acct_id, amt);
 	}
@@ -159,7 +159,7 @@ public class AccountService {
 		System.out.println();
 		
 		System.out.print("         Enter Amount To Be Transferred: ");
-		double amt = InputUtility.getDoubleInput(100_000);
+		double amt = InputUtility.getDoubleInput(500_000);
 		
 		acctDao.transferMoney(acct_idFrom, acct_idTo, amt);
 	}
@@ -216,8 +216,74 @@ public class AccountService {
 	}
 	
 	public double exchangeCurrency(String startCurrency, double startAmount, String newCurrency) {
-		double newAmount = 0.0;
+		double newAmount = 0.00;
 		return newAmount;
+	}
+
+	public void approve() {
+		System.out.println("                                                   ");
+		System.out.println("                                                   ");
+		System.out.println("    	*******************************************");
+		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
+		System.out.println("        *                                         *");
+		System.out.println("        *         APPROVE BANK ACCOUNT            *");
+		System.out.println("    	*******************************************");
+		System.out.println("                                                   ");
+		
+		System.out.print("         Enter Account To Approve: "); // id for account
+		int acct_id = InputUtility.getIntChoice(100);
+		acctDao.approveAccount(acct_id, userService.getUserId());
+	}
+
+	public void deny() {
+		System.out.println("                                                   ");
+		System.out.println("                                                   ");
+		System.out.println("    	*******************************************");
+		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
+		System.out.println("        *                                         *");
+		System.out.println("        *          DENY BANK ACCOUNT              *");
+		System.out.println("    	*******************************************");
+		System.out.println("                                                   ");
+		
+		System.out.print("         Enter Account To Deny: "); // id for account
+		int acct_id = InputUtility.getIntChoice(100);
+		acctDao.denyAccount(acct_id, userService.getUserId());
+	}
+
+	public void view() {
+		System.out.println("                                                   ");
+		System.out.println("                                                   ");
+		System.out.println("    	*******************************************");
+		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
+		System.out.println("        *                                         *");
+		System.out.println("        *       VIEW BANK ACCOUNT INFO            *");
+		System.out.println("    	*******************************************");
+		System.out.println("                                                   ");
+		
+	}
+
+	public void edit() {
+		System.out.println("                                                   ");
+		System.out.println("                                                   ");
+		System.out.println("    	*******************************************");
+		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
+		System.out.println("        *                                         *");
+		System.out.println("        *        EDIT BANK ACCOUNT INFO           *");
+		System.out.println("    	*******************************************");
+		System.out.println("                                                   ");
+		
+	}
+
+	public void viewAll() {
+		System.out.println("                                                   ");
+		System.out.println("                                                   ");
+		System.out.println("    	*******************************************");
+		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
+		System.out.println("        *                                         *");
+		System.out.println("        *        VIEW ALL BANK ACCOUNTS           *");
+		System.out.println("    	*******************************************");
+		System.out.println("                                                   ");
+		
 	}
 	
 }
