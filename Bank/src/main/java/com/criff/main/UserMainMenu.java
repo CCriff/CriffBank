@@ -45,7 +45,7 @@ public class UserMainMenu implements Menu{
 	@Override
 	public Menu process() {
 		switch(this.inputValue) {
-			case 0: return null;
+			case 0: System.exit(0); break;
 			case 1: acctService.openChecking();break;
 			case 2: acctService.openSavings(); break;
 			case 3: acctService.deposit(); break;

@@ -43,7 +43,7 @@ public class LoginMenu implements Menu {
 				return new AdminMenu();
 			case 0: 
 				log.debug(InputUtility.displayHeader("EXITING CRIFF BANKING SYSTEM..."));
-				return null;
+				System.exit(0); break;
 			default:
             	log.debug(InputUtility.displayHeader("Invalid Choice. Please Choose Again."));
                 break;

@@ -33,7 +33,7 @@ public class EmpMenu implements Menu {
 	@Override
 	public Menu process() {
 		switch(this.inputValue) {
-		case 0: return null;
+		case 0: System.exit(0); break;
 		case 1: acctService.approve(); break;
 		case 2: acctService.deny(); break;
 		case 3: userService.logout(); break;
