@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.criff.models.Account;
 
@@ -26,8 +24,8 @@ public class AccountsDaoImpl implements AccountDao {
 	
 	public Account createAcct(Account acct, int user_id) {
 		connect();
-		String query = "INSERT INTO account_table (acct_type, currency, balence) " +
-				"VALUES (?, ?, ?) RETURNING id";
+		String query = "INSERT INTO account_table (acct_type, currency, balence, acct_status) " +
+				"VALUES (?, ?, ?, ?) RETURNING id";
 		String query2 = "INSERT INTO users_accounts (users_id, accounts_id) VALUES (?,?)";
 		
 		try {
@@ -35,6 +33,7 @@ public class AccountsDaoImpl implements AccountDao {
 			s.setString(1, acct.getType());
 			s.setString(2, acct.getCurrency());
 			s.setDouble(3, acct.getBalance());
+			s.setBoolean(4, acct.isAcctStatus());
 			ResultSet resultSet = s.executeQuery();	
 			
 			if (resultSet.next()) {
@@ -157,13 +156,35 @@ public class AccountsDaoImpl implements AccountDao {
 		}
 	}
 
-	public void approveAccount(int acct_id, int userId) {
-		// TODO Auto-generated method stub
+	public void approveAccount(int acct_id) {
+		connect();
+		
+		String query = "update account_table set acct_status = true where id = ?";
+		
+		try {
+			PreparedStatement s = conn.prepareStatement(query);
+			s.setInt(1, acct_id);
+			s.executeUpdate();
+
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
 		
 	}
 
-	public void denyAccount(int acct_id, int userId) {
-		// TODO Auto-generated method stub
+	public void denyAccount(int acct_id) {
+		connect();
+		
+		String query = "update account_table set acct_status = false where id = ?";
+		
+		try {
+			PreparedStatement s = conn.prepareStatement(query);
+			s.setInt(1, acct_id);
+			s.executeUpdate();
+
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
 		
 	}	   
 }

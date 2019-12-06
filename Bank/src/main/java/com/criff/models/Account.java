@@ -5,7 +5,16 @@ public class Account {
 	private double balance;
 	private String currency;
 	private String type;
+	private boolean acctStatus = false;
 	
+	
+
+	public boolean isAcctStatus() {
+		return acctStatus;
+	}
+	public void setAcctStatus(boolean acctStatus) {
+		this.acctStatus = acctStatus;
+	}
 	public int getAcctID() {
 		return acctID;
 	}
@@ -34,7 +43,8 @@ public class Account {
 	
 	@Override
 	public String toString() {
-		return "Account [acctID=" + acctID + ", balance=" + balance + ", currency=" + currency + ", type=" + type + "]";
+		return "Account [acctID=" + acctID + ", balance=" + balance + ", currency=" + currency + ", type=" + type
+				+ ", acctStatus=" + acctStatus + "]";
 	}
 	
 	@Override
@@ -42,6 +52,7 @@ public class Account {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + acctID;
+		result = prime * result + (acctStatus ? 1231 : 1237);
 		long temp;
 		temp = Double.doubleToLongBits(balance);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -60,6 +71,8 @@ public class Account {
 			return false;
 		Account other = (Account) obj;
 		if (acctID != other.acctID)
+			return false;
+		if (acctStatus != other.acctStatus)
 			return false;
 		if (Double.doubleToLongBits(balance) != Double.doubleToLongBits(other.balance))
 			return false;
@@ -80,12 +93,14 @@ public class Account {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
-	public Account(int acctID, double balance, int accessCode, String currency, String type) {
+	public Account(int acctID, double balance, String currency, String type, boolean acctStatus) {
 		super();
 		this.acctID = acctID;
 		this.balance = balance;
 		this.currency = currency;
 		this.type = type;
+		this.acctStatus = acctStatus;
 	}
+	
+	
 }

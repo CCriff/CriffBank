@@ -10,6 +10,7 @@ public class AccountService {
 	private static AccountsDaoImpl acctDao = new AccountsDaoImpl();
 	private static UserService userService = new UserService();
 
+
 	public static Account getAccount() {
 		return acct;
 	}
@@ -50,6 +51,14 @@ public class AccountService {
 		acctType = acct.getType();
 	}
 	
+	public boolean isAcctStatus() {
+		return acct.isAcctStatus();
+	}
+	
+	public void setAcctStatus(boolean acctStatus) {
+		acctStatus = acct.isAcctStatus();
+	}
+	
 	public void openChecking() {
 		acct.setBalance(0.00);
 		acct.setCurrency(CurrencyMenu.process());
@@ -58,6 +67,10 @@ public class AccountService {
 		// Create account in DB and add returned id(unique account number) to user accounts array
 		acct = acctDao.createAcct(acct, userService.getUserId());
 		UserService.newUser = false;
+		acct.setAcctStatus(false);
+		
+		InputUtility.displayHeader("Checking Account Was Created Successfully!");
+		InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
 	}
 	
 	public void openSavings() {
@@ -68,6 +81,11 @@ public class AccountService {
 		// Create account in DB and add returned id(unique account number) to user accounts array
 		acct = acctDao.createAcct(acct, userService.getUserId());
 		UserService.newUser = false;
+		acct.setAcctStatus(false);
+		
+		InputUtility.displayHeader("Savings Account Was Created Successfully!");
+		InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+		
 	}
 	
 	public void deposit() {
@@ -85,11 +103,16 @@ public class AccountService {
 		System.out.print("         Enter Account To Deposit Into: "); // id for account
 		int acct_id = InputUtility.getIntChoice(100);
 		
+		if (acct.isAcctStatus() == false) {
+			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+			} else {
+		
 		System.out.println();
 		System.out.print("         Enter Amount To Be Deposited: ");
 		double amt = InputUtility.getDoubleInput(500_000);
 		
 		acctDao.depositTo(acct_id, amt);
+		}
 	}
 	
 	public void withdraw() {
@@ -110,6 +133,10 @@ public class AccountService {
 		
 		boolean acctFound = userService.getAcctNumbers().contains(acct_id);
 		
+		if (acct.isAcctStatus() == false) {
+			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+			} else {
+		
 		if(acctFound == false) {
 			do {
 				System.out.println("         ERROR: Please Enter A Correct Account Number!");
@@ -124,6 +151,7 @@ public class AccountService {
 		double amt = InputUtility.getDoubleInput(100_000);
 		
 		acctDao.withdrawFrom(acct_id, amt);
+		}
 	}
 	
 	public void transfer() {
@@ -144,6 +172,10 @@ public class AccountService {
 		
 		boolean acctFound = userService.getAcctNumbers().contains(acct_idFrom);
 		
+		if (acct.isAcctStatus() == false) {
+			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+			} else {
+		
 		if(acctFound == false) {
 			do {
 				System.out.println("         ERROR: Please Enter A Correct Account Number!");
@@ -162,6 +194,7 @@ public class AccountService {
 		double amt = InputUtility.getDoubleInput(500_000);
 		
 		acctDao.transferMoney(acct_idFrom, acct_idTo, amt);
+			}
 	}
 	
 	public void addUserToAccount() {
@@ -182,6 +215,10 @@ public class AccountService {
 		
 		boolean acctFound = userService.getAcctNumbers().contains(acct_id);
 		
+		if (acct.isAcctStatus() == false) {
+			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+			} else {
+		
 		if(acctFound == false) {
 			do {
 				System.out.println("         ERROR: Please Enter A Correct Account Number!");
@@ -196,6 +233,7 @@ public class AccountService {
 		String newUserEmail = InputUtility.getStringInput(100);
 		
 		acctDao.addUserToAcct(acct_id, newUserEmail);
+		}
 	} 
 	
 	public void deleteAcct() {
@@ -232,7 +270,9 @@ public class AccountService {
 		
 		System.out.print("         Enter Account To Approve: "); // id for account
 		int acct_id = InputUtility.getIntChoice(100);
-		acctDao.approveAccount(acct_id, userService.getUserId());
+		acctDao.approveAccount(acct_id);
+		
+		InputUtility.displayHeader("Your Account Has Been Approved And Is Ready For Immediate Use!");
 	}
 
 	public void deny() {
@@ -247,7 +287,9 @@ public class AccountService {
 		
 		System.out.print("         Enter Account To Deny: "); // id for account
 		int acct_id = InputUtility.getIntChoice(100);
-		acctDao.denyAccount(acct_id, userService.getUserId());
+		acctDao.denyAccount(acct_id);
+		
+		InputUtility.displayHeader("Sorry, Your Account Has Been Denied! Please Contact Management For Further Information!");
 	}
 
 	public void view() {

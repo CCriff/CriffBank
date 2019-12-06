@@ -11,6 +11,7 @@ import com.criff.repository.UserDaoImpl;
 import com.criff.utility.InputUtility;
 
 public class EmployeeService {
+	private static EmployeeService empService = new EmployeeService();
 	private static UserService userService = new UserService();
 	private static AdminMenu adminMenu = new AdminMenu();
 	private static EmpMenu empMenu = new EmpMenu();
@@ -75,32 +76,7 @@ public class EmployeeService {
 	public void setAcctNumbers(ArrayList<Integer> acctNumbers) {
 		acctNumbers = user.getAcctNumbers();
 	}
-	
-	public void createEmployee() {
-		System.out.println("                                                   ");
-		System.out.println("                                                   ");
-		System.out.println("    	*******************************************");
-		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
-		System.out.println("        *                                         *");
-		System.out.println("        *       New Employee Sign Up!             *");
-		System.out.println("    	*******************************************");
-		System.out.println("                                                   ");
-		System.out.print("         Please Enter Your First Name: ");
-		user.setFirstName(InputUtility.getStringInput(30));
 		
-		System.out.print("         Please Enter Your Last Name: ");
-		user.setLastName(InputUtility.getStringInput(30));
-		
-		System.out.print("         Please Enter An Username Or Email: ");
-		user.setEmail(InputUtility.getStringInput(30));
-
-		System.out.print("         Please Enter Your Password: ");
-		user.setPass_hash(BCrypt.hashpw(InputUtility.getStringInput(30), BCrypt.gensalt()));
-		
-		user = userDao.insertUser(user);
-		newUser = true;
-	}
-	
 	public void employeeLogin() {
 		System.out.println("                                                   ");
 		System.out.println("                                                   ");
@@ -127,9 +103,11 @@ public class EmployeeService {
 			InputUtility.displayHeader("         Logging Into Employee Portal . . .");
 			empMenu.showMenu();
 			
+		} else {
+			
+			InputUtility.displayHeader("Could Not Log In To Employee Portal!");
 		}
 		
-		user = userDao.checkUser(user, email, pw);
 		System.out.println();
 		InputUtility.displayHeader("         Logging Into Your Account . . .");
 		
@@ -148,19 +126,22 @@ public class EmployeeService {
 		
         boolean logIn = false;
         currentUser = null;
-        InputUtility.displayHeader(userService.getUserFirstName() + " " + userService.getUserLastName() + " Has Logged Out.");
-        InputUtility.displayHeader("Enter 1 To Login Again Or Enter 0 To Quit The CRIFF BANKING SYSTEM.");
+        InputUtility.displayHeader("Employee Has Logged Out Of Employee Portal.");
+        InputUtility.displayHeader("Enter 1 To Login, 2 To Login As An Employee, Or Enter 0 To Quit The CRIFF BANKING SYSTEM.");
         String choice = InputUtility.getStringInput(1);
         while (logIn == false) {
             if (choice.equals("1")) {
-                employeeLogin();
+                userService.userLogin();
                 logIn = true;
             } else if (choice.equals("0")) {
                 logIn = false;
                 System.exit(0);
-                
-            } else {
-            	InputUtility.displayHeader("Please Enter 1 To Login Or 0 to Exit!");
+            } else if (choice.equals("2")) {
+            	employeeLogin();
+                logIn = true;
+            } else
+                {
+            	InputUtility.displayHeader("Please Enter 1 To Login, 2 To Login As An Employee, Or 0 to Exit!");
                 choice = InputUtility.getStringInput(2);
                 logIn = false;
             }

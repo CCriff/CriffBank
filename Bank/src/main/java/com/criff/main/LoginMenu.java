@@ -1,11 +1,13 @@
 package com.criff.main;
 
+import com.criff.services.EmployeeService;
 import com.criff.services.UserService;
 import com.criff.utility.InputUtility;
 
 public class LoginMenu implements Menu {
 	public int inputValue;
 	private static UserService userService = new UserService();
+	private static EmployeeService empService = new EmployeeService();
 
 	@Override
 	public void showMenu() {
@@ -18,7 +20,8 @@ public class LoginMenu implements Menu {
 		System.out.println("        *                                         *");
 		System.out.println("        *     1. OPEN NEW USER ACCOUNT            *");
 		System.out.println("        *     2. LOGIN TO EXISTING ACCOUNT        *");
-		System.out.println("        *     3. EXIT CRIFF BANKING SYSTEM        *");
+		System.out.println("        *     3. LOGIN TO EMPLOYEE ACCOUNT        *");
+		System.out.println("        *     0. EXIT CRIFF BANKING SYSTEM        *");
 		System.out.println("        *                                         *");
 		System.out.println("        *******************************************");
 	}
@@ -34,7 +37,11 @@ public class LoginMenu implements Menu {
 				log.debug(InputUtility.displayHeader("LOGIN TO AN EXISTING ACCOUNT..."));
 				userService.userLogin();
 				return new UserMainMenu();
-			case 3: 
+			case 3:
+				log.debug(InputUtility.displayHeader("LOGIN TO EMPLOYEE PORTAL..."));
+				empService.employeeLogin();
+				return new AdminMenu();
+			case 0: 
 				log.debug(InputUtility.displayHeader("EXITING CRIFF BANKING SYSTEM..."));
 				return null;
 			default:

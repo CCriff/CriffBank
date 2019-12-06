@@ -23,9 +23,7 @@ public class EmpMenu implements Menu {
 			System.out.println("                                                   ");
 			System.out.println("        *     1. APPROVE AN APPLICATION           *");
 			System.out.println("        *     2. DENY AN APPLICATION              *");
-			System.out.println("        *     3. VIEW AN ACCOUNT INFORMATION      *");
-			System.out.println("        *     4. VIEW ALL ACCOUNTS                *");
-			System.out.println("        *     5. LOGOUT                           *");
+			System.out.println("        *     3. LOGOUT                           *");
 			System.out.println("        *     0. EXIT CRIFF BANKING SYSTEM        *");
 			System.out.println("        *******************************************");
 		
@@ -38,9 +36,7 @@ public class EmpMenu implements Menu {
 		case 0: return null;
 		case 1: acctService.approve(); break;
 		case 2: acctService.deny(); break;
-		case 3: acctService.view(); break;
-		case 4: acctService.viewAll(); break;
-		case 5: userService.logout(); break;
+		case 3: userService.logout(); break;
 		default:
         	log.debug(InputUtility.displayHeader("Invalid Choice. Please Choose Again."));
             break;

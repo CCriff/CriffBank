@@ -11,6 +11,7 @@ import com.criff.repository.UserDaoImpl;
 import com.criff.utility.InputUtility;
 
 public class UserService {
+	private static EmployeeService empService = new EmployeeService();
 	private static UserService userService = new UserService();
 	private static AdminMenu adminMenu = new AdminMenu();
 	private static EmpMenu empMenu = new EmpMenu();
@@ -117,18 +118,6 @@ public class UserService {
 		InputUtility.displayHeader("         Please Enter Your Password: ");
 		String pw = InputUtility.getStringInput(30);
 		
-		if(email.equalsIgnoreCase("admin") && pw.equals("1234")) { // simple Admin Login
-			
-			InputUtility.displayHeader("         Logging Into Admin Portal . . .");
-			adminMenu.showMenu();
-			
-		} else if (email.equalsIgnoreCase("emp") && pw.equals("1234")) {
-			
-			InputUtility.displayHeader("         Logging Into Employee Portal . . .");
-			empMenu.showMenu();
-			
-		}
-		
 		user = userDao.checkUser(user, email, pw);
 		System.out.println();
 		InputUtility.displayHeader("         Logging Into Your Account . . .");
@@ -149,7 +138,7 @@ public class UserService {
         boolean logIn = false;
         currentUser = null;
         InputUtility.displayHeader(userService.getUserFirstName() + " " + userService.getUserLastName() + " Has Logged Out.");
-        InputUtility.displayHeader("Enter 1 To Login Again Or Enter 0 To Quit The CRIFF BANKING SYSTEM.");
+        InputUtility.displayHeader("Enter 1 To Login, 2 To Login As An Employee, Or Enter 0 To Quit The CRIFF BANKING SYSTEM.");
         String choice = InputUtility.getStringInput(1);
         while (logIn == false) {
             if (choice.equals("1")) {
@@ -158,9 +147,12 @@ public class UserService {
             } else if (choice.equals("0")) {
                 logIn = false;
                 System.exit(0);
-                
-            } else {
-            	InputUtility.displayHeader("Please Enter 1 To Login Or 0 to Exit!");
+            } else if (choice.equals("2")) {
+            	empService.employeeLogin();
+                logIn = true;
+            } else
+                {
+            	InputUtility.displayHeader("Please Enter 1 To Login, 2 To Login As An Employee, Or 0 to Exit!");
                 choice = InputUtility.getStringInput(2);
                 logIn = false;
             }
