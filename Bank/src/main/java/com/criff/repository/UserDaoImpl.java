@@ -6,10 +6,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import com.criff.models.Account;
 import com.criff.models.User;
+import com.criff.utility.InputUtility;
 
 
 public class UserDaoImpl implements UserDao {
@@ -56,7 +60,7 @@ public class UserDaoImpl implements UserDao {
 		connect();
 		
 		String query = "SELECT * FROM account_table WHERE id = ANY (SELECT accounts_id" 
-						+ "	FROM users_accounts WHERE users_id = ?)";
+						+ "	FROM users_accounts WHERE users_id = ?) "; 
 		
 		try {
 			PreparedStatement s = conn.prepareStatement(query);
@@ -70,7 +74,8 @@ public class UserDaoImpl implements UserDao {
 				String b = resultSet.getString("acct_type");
 				String c = resultSet.getString("currency");
 				double d = resultSet.getDouble("balence");
-				System.out.println("              " + a + " | " + b + ":    " + "$" + df2.format(d) + " " + c);
+				boolean e = resultSet.getBoolean("acct_status");
+				InputUtility.displayHeader("Account #:   " + a + " | " + b + ":    " + "$" + df2.format(d) + " " + c + "     " + "Account Opened: " + e);
 				
 				user.getAcctNumbers().add(a);
 				hasAccts = true;
@@ -115,7 +120,7 @@ public class UserDaoImpl implements UserDao {
 					user.setEmail(email);
 					user.setPass_hash(pwLogin);
 				}else {
-					System.out.println("         ERROR:  Incorrect Password!");
+					InputUtility.displayHeader("         ERROR:  Incorrect Password!");
 					System.exit(0);
 				}
 			}
@@ -125,7 +130,7 @@ public class UserDaoImpl implements UserDao {
 			
 			// If User name or email is not found -> exit
 			if(emailFound == false) {
-				System.out.println("         ERROR:  Username Or Email Not Found!");
+				InputUtility.displayHeader("         ERROR:  Username Or Email Not Found!");
 				System.exit(0);
 			}
 			
@@ -134,4 +139,71 @@ public class UserDaoImpl implements UserDao {
 		}
 		return user;
 	}
+
+	public List<User> getAllUsers(int user_id) {
+		connect();
+
+		List<User> users = null;
+		
+		String query = "select * from user_table";
+		
+		try {
+			
+			PreparedStatement s = conn.prepareStatement(query);
+			
+			users = new ArrayList<User>();
+			
+			ResultSet resultSet = s.executeQuery();
+
+			while (resultSet.next()) {
+				users.add(
+						new User(resultSet.getInt(1),
+								resultSet.getString(2), 
+								resultSet.getString(3),
+								resultSet.getString(4),
+								resultSet.getString(5)								
+						));	
+				
+				
+			}
+			s.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return users;
+		
+	}
+	
+	public void EditUserAccountUsername(int acct_id, String email) {
+		connect();		
+		String query = "UPDATE user_table SET email = ? WHERE id = ?";	
+		try {
+			PreparedStatement s = conn.prepareStatement(query);
+			s.setString(1, email);
+			s.setInt(2, acct_id);
+			s.executeUpdate();
+			s.close();
+			
+		}catch(SQLException e) {
+			InputUtility.displayHeader("         ERROR: User Email Or Username Could Not Be Updated.");
+		}
+		InputUtility.displayHeader("         EDIT SUCCESSFUL!");
+	}
+	
+	public void EditUserAccountPassword(int acct_id, String pw_hash) {
+		connect();		
+		String query = "UPDATE user_table SET pw_hash = ? WHERE id = ?";	
+		try {
+			PreparedStatement s = conn.prepareStatement(query);
+			s.setString(1, pw_hash);
+			s.setInt(2, acct_id);
+			s.executeUpdate();
+			s.close();
+			
+		}catch(SQLException e) {
+			InputUtility.displayHeader("         ERROR: User Password Could Not Be Updated.");
+		}
+		InputUtility.displayHeader("         EDIT SUCCESSFUL!");
+	}
+	
 }

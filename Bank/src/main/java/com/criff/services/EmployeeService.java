@@ -16,6 +16,7 @@ public class EmployeeService {
 	private static AdminMenu adminMenu = new AdminMenu();
 	private static EmpMenu empMenu = new EmpMenu();
 	public static User user = new User();
+	public static User emp = new User();
 	private static UserDaoImpl userDao = new UserDaoImpl();
 	public static boolean newUser = false;
 	public boolean loggedIn = false;
@@ -92,22 +93,7 @@ public class EmployeeService {
 		
 		InputUtility.displayHeader("         Please Enter Your Password: ");
 		String pw = InputUtility.getStringInput(30);
-		
-		if(email.equalsIgnoreCase("admin") && pw.equals("1234")) { // simple Admin Login
-			
-			InputUtility.displayHeader("         Logging Into Admin Portal . . .");
-			adminMenu.showMenu();
-			
-		} else if (email.equalsIgnoreCase("emp") && pw.equals("1234")) {
-			
-			InputUtility.displayHeader("         Logging Into Employee Portal . . .");
-			empMenu.showMenu();
-			
-		} else {
-			
-			InputUtility.displayHeader("Could Not Log In To Employee Portal!");
-		}
-		
+				
 		System.out.println();
 		InputUtility.displayHeader("         Logging Into Your Account . . .");
 		
@@ -150,7 +136,7 @@ public class EmployeeService {
 
     }
 	
-	public boolean employeedisplayAccts() {  
+	public boolean displayAccts() {  
 		boolean hasAccts = false;
 		hasAccts = userDao.getUserAccounts(user, hasAccts); 
 		return hasAccts;

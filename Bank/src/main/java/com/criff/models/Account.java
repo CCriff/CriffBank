@@ -2,9 +2,9 @@ package com.criff.models;
 
 public class Account {
 	private int acctID;
-	private double balance;
-	private String currency;
 	private String type;
+	private String currency;
+	private float balance;
 	private boolean acctStatus = false;
 	
 	
@@ -21,10 +21,10 @@ public class Account {
 	public void setAcctID(int acctID) {
 		this.acctID = acctID;
 	}
-	public double getBalance() {
+	public float getBalance() {
 		return balance;
 	}
-	public void setBalance(double balance) {
+	public void setBalance(float balance) {
 		this.balance = balance;
 	}
 
@@ -54,7 +54,7 @@ public class Account {
 		result = prime * result + acctID;
 		result = prime * result + (acctStatus ? 1231 : 1237);
 		long temp;
-		temp = Double.doubleToLongBits(balance);
+		temp = Float.floatToIntBits(balance);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
@@ -74,7 +74,7 @@ public class Account {
 			return false;
 		if (acctStatus != other.acctStatus)
 			return false;
-		if (Double.doubleToLongBits(balance) != Double.doubleToLongBits(other.balance))
+		if (Float.floatToIntBits(balance) != Float.floatToIntBits(other.balance))
 			return false;
 		if (currency == null) {
 			if (other.currency != null)
@@ -93,12 +93,12 @@ public class Account {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Account(int acctID, double balance, String currency, String type, boolean acctStatus) {
+	public Account(int acctID, String type, String currency, float balance, boolean acctStatus) {
 		super();
 		this.acctID = acctID;
-		this.balance = balance;
-		this.currency = currency;
 		this.type = type;
+		this.currency = currency;
+		this.balance = balance;
 		this.acctStatus = acctStatus;
 	}
 	

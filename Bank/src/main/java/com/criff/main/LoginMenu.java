@@ -20,8 +20,9 @@ public class LoginMenu implements Menu {
 		System.out.println("        *                                         *");
 		System.out.println("        *     1. OPEN NEW USER ACCOUNT            *");
 		System.out.println("        *     2. LOGIN TO EXISTING ACCOUNT        *");
-		System.out.println("        *     3. LOGIN TO EMPLOYEE ACCOUNT        *");
-		System.out.println("        *     0. EXIT CRIFF BANKING SYSTEM        *");
+		System.out.println("        *     3. LOGIN TO ADMIN ACCOUNT           *");
+		System.out.println("        *     4. LOGIN TO EMPLOYEE ACCOUNT        *");
+		System.out.println("        *     5. EXIT CRIFF BANKING SYSTEM        *");
 		System.out.println("        *                                         *");
 		System.out.println("        *******************************************");
 	}
@@ -38,10 +39,14 @@ public class LoginMenu implements Menu {
 				userService.userLogin();
 				return new UserMainMenu();
 			case 3:
-				log.debug(InputUtility.displayHeader("LOGIN TO EMPLOYEE PORTAL..."));
+				log.debug(InputUtility.displayHeader("LOGIN TO ADMIN PORTAL..."));
 				empService.employeeLogin();
 				return new AdminMenu();
-			case 0: 
+			case 4:
+				log.debug(InputUtility.displayHeader("LOGIN TO EMPLOYEE PORTAL..."));
+				empService.employeeLogin();
+				return new EmpMenu();
+			case 5: 
 				log.debug(InputUtility.displayHeader("EXITING CRIFF BANKING SYSTEM..."));
 				System.exit(0); break;
 			default:
@@ -53,7 +58,7 @@ public class LoginMenu implements Menu {
 
 	@Override
 	public void getUserInput() {
-		this.inputValue = InputUtility.getIntChoice(3);
+		this.inputValue = InputUtility.getIntChoice(5);
 	}
 	
 }

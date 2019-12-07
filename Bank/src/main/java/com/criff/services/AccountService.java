@@ -2,13 +2,19 @@ package com.criff.services;
 
 import com.criff.main.CurrencyMenu;
 import com.criff.repository.AccountsDaoImpl;
+import com.criff.repository.UserDaoImpl;
 import com.criff.models.Account;
+import com.criff.models.User;
 import com.criff.utility.InputUtility;
 
 public class AccountService {
-	public static Account acct = new Account();
+	private static UserDaoImpl userDao = new UserDaoImpl();
+	private static User user = new User();
+	private static Account acct = new Account();
 	private static AccountsDaoImpl acctDao = new AccountsDaoImpl();
 	private static UserService userService = new UserService();
+	private static AccountService acctService = new AccountService();
+	private static EmployeeService empService = new EmployeeService();
 
 
 	public static Account getAccount() {
@@ -27,11 +33,11 @@ public class AccountService {
 		id = acct.getAcctID();
 	}
 	
-	public double getBalance() {
+	public float getBalance() {
 		return acct.getBalance();
 	}
 	
-	public void setBalance(double balance) {
+	public void setBalance(float balance) {
 		balance = acct.getBalance();
 	}
 	
@@ -60,7 +66,7 @@ public class AccountService {
 	}
 	
 	public void openChecking() {
-		acct.setBalance(0.00);
+		acct.setBalance((float) 0.00);
 		acct.setCurrency(CurrencyMenu.process());
 		acct.setType("CHECKING");
 
@@ -74,7 +80,7 @@ public class AccountService {
 	}
 	
 	public void openSavings() {
-		acct.setBalance(0.00);
+		acct.setBalance((float) 0.00);
 		acct.setCurrency(CurrencyMenu.process());
 		acct.setType("SAVINGS");
 
@@ -103,16 +109,11 @@ public class AccountService {
 		System.out.print("         Enter Account To Deposit Into: "); // id for account
 		int acct_id = InputUtility.getIntChoice(100);
 		
-		if (acct.isAcctStatus() == false) {
-			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
-			} else {
-		
 		System.out.println();
 		System.out.print("         Enter Amount To Be Deposited: ");
 		double amt = InputUtility.getDoubleInput(500_000);
 		
 		acctDao.depositTo(acct_id, amt);
-		}
 	}
 	
 	public void withdraw() {
@@ -133,9 +134,9 @@ public class AccountService {
 		
 		boolean acctFound = userService.getAcctNumbers().contains(acct_id);
 		
-		if (acct.isAcctStatus() == false) {
-			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
-			} else {
+//		if (status == false) {
+//			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+//			} else {
 		
 		if(acctFound == false) {
 			do {
@@ -150,8 +151,16 @@ public class AccountService {
 		System.out.print("         Enter Amount To Be Withdrawn: ");
 		double amt = InputUtility.getDoubleInput(100_000);
 		
+		double balance = acct.getBalance();
+		
+		if(amt  > balance) {
+			InputUtility.displayHeader("Transaction Cannot Be Completed. You Have Insuffient Funds.");
+			System.out.print("         Enter Amount To Be Withdrawn: ");
+			amt = InputUtility.getDoubleInput(100_000);			
+		}  
+		
 		acctDao.withdrawFrom(acct_id, amt);
-		}
+		//}
 	}
 	
 	public void transfer() {
@@ -172,9 +181,9 @@ public class AccountService {
 		
 		boolean acctFound = userService.getAcctNumbers().contains(acct_idFrom);
 		
-		if (acct.isAcctStatus() == false) {
-			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
-			} else {
+//		if (acct.isAcctStatus() == false) {
+//			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+//			} else {
 		
 		if(acctFound == false) {
 			do {
@@ -193,8 +202,16 @@ public class AccountService {
 		System.out.print("         Enter Amount To Be Transferred: ");
 		double amt = InputUtility.getDoubleInput(500_000);
 		
+//		double balance = acct.getBalance();
+//		
+//		if(amt  > balance) {
+//			InputUtility.displayHeader("Transaction Cannot Be Completed. You Have Insuffient Funds.");
+//			System.out.print("         Enter Amount To Be Transferred: ");
+//			amt = InputUtility.getDoubleInput(100_000);			
+//		}
+		
 		acctDao.transferMoney(acct_idFrom, acct_idTo, amt);
-			}
+			//}
 	}
 	
 	public void addUserToAccount() {
@@ -215,14 +232,14 @@ public class AccountService {
 		
 		boolean acctFound = userService.getAcctNumbers().contains(acct_id);
 		
-		if (acct.isAcctStatus() == false) {
-			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
-			} else {
+//		if (acct.isAcctStatus() == false) {
+//			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+//			} else {
 		
 		if(acctFound == false) {
 			do {
 				System.out.println("         ERROR: Please Enter A Correct Account Number!");
-				System.out.print("         Enter Account To Transfer From: "); // id for account
+				System.out.print("         Enter Account To Add User: "); // id for account
 				System.out.println();
 				acct_id = InputUtility.getIntChoice(100);
 				acctFound = userService.getAcctNumbers().contains(acct_id);
@@ -233,7 +250,7 @@ public class AccountService {
 		String newUserEmail = InputUtility.getStringInput(100);
 		
 		acctDao.addUserToAcct(acct_id, newUserEmail);
-		}
+		//}
 	} 
 	
 	public void deleteAcct() {
@@ -251,6 +268,8 @@ public class AccountService {
 		System.out.print("         Enter Account To Delete: "); // id for account
 		int acct_id = InputUtility.getIntChoice(100);
 		acctDao.deleteAccount(acct_id, userService.getUserId());
+		
+		InputUtility.displayHeader(acct_id + " Has Been Deleted!");
 	}
 	
 	public double exchangeCurrency(String startCurrency, double startAmount, String newCurrency) {
@@ -287,12 +306,12 @@ public class AccountService {
 		
 		System.out.print("         Enter Account To Deny: "); // id for account
 		int acct_id = InputUtility.getIntChoice(100);
-		acctDao.denyAccount(acct_id);
 		
-		InputUtility.displayHeader("Sorry, Your Account Has Been Denied! Please Contact Management For Further Information!");
+		
+		InputUtility.displayHeader("Sorry, Your Account Has Been Denied Or Put On A Freeze! Please Contact Management For Further Information!");
 	}
 
-	public void view() {
+	public void viewSingleAccount() {
 		System.out.println("                                                   ");
 		System.out.println("                                                   ");
 		System.out.println("    	*******************************************");
@@ -302,8 +321,44 @@ public class AccountService {
 		System.out.println("    	*******************************************");
 		System.out.println("                                                   ");
 		
+		System.out.print("         Enter Account To View: "); // id for account
+		int acct_id = InputUtility.getIntChoice(100);
+
+		System.out.println("");
 	}
 
+	public void viewAllAccounts() {
+		System.out.println("                                                   ");
+		System.out.println("                                                   ");
+		System.out.println("    	*******************************************");
+		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
+		System.out.println("        *                                         *");
+		System.out.println("        *        VIEW ALL BANK ACCOUNTS           *");
+		System.out.println("    	*******************************************");
+		System.out.println("                                                   ");
+		
+		int acct_id = 0;
+		
+		System.out.println(acctDao.getAllAccounts(acct_id));
+				
+	}
+	
+	public void viewAllUsers() {
+		System.out.println("                                                   ");
+		System.out.println("                                                   ");
+		System.out.println("    	*******************************************");
+		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
+		System.out.println("        *                                         *");
+		System.out.println("        *        VIEW ALL USER ACCOUNTS           *");
+		System.out.println("    	*******************************************");
+		System.out.println("                                                   ");
+		
+		int user_id = 0;
+		
+		System.out.println(userDao.getAllUsers(user_id));
+				
+	}
+	
 	public void edit() {
 		System.out.println("                                                   ");
 		System.out.println("                                                   ");
@@ -314,17 +369,29 @@ public class AccountService {
 		System.out.println("    	*******************************************");
 		System.out.println("                                                   ");
 		
-	}
-
-	public void viewAll() {
-		System.out.println("                                                   ");
-		System.out.println("                                                   ");
-		System.out.println("    	*******************************************");
-		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
-		System.out.println("        *                                         *");
-		System.out.println("        *        VIEW ALL BANK ACCOUNTS           *");
-		System.out.println("    	*******************************************");
-		System.out.println("                                                   ");
+		System.out.print("         Which User Account Do You Want To Edit: "); // id for account
+		int user_id = InputUtility.getIntChoice(100);
+		
+		System.out.print("         What Do You Want To Edit: (1) Username/Email (2) Password ");
+		int edit = InputUtility.getIntChoice(2);
+		if (edit == 1) {
+			System.out.println("What Do You Want To Change Your Uername/Email To:");
+			String changeue = InputUtility.getStringInput(30);
+			userService.setUserEmail(changeue);
+			
+			System.out.println("Your Username/Email Has Been Changed.");
+			userDao.EditUserAccountUsername(edit, changeue);
+		} else if (edit == 2) {
+			System.out.println("What Do You Want To Change Your Password To:");
+			String changepw = InputUtility.getStringInput(30);
+			userService.setUserEmail(changepw);
+			
+			System.out.println("Your Password Has Been Changed.");
+			userDao.EditUserAccountPassword(edit, changepw);
+		} else {
+			InputUtility.displayHeader("Please Enter (1) to Change Your Username Or Email Enter (2) To Change Your Password.");
+		}
+		
 		
 	}
 	

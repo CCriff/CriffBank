@@ -59,6 +59,7 @@ public class InputUtility {
 	
 	public static String getStringInput(int max) {
 		String input;
+		boolean isEmpty = false;
 		
 		while(true) {
 			input = scanner.nextLine();
@@ -73,6 +74,10 @@ public class InputUtility {
 				System.out.println("         Enter string less than" + max);
 				continue;
 			}
+			
+			
+			
+			
 			
 			return input;
 		}

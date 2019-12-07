@@ -5,14 +5,21 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.criff.models.Account;
+import com.criff.models.User;
+import com.criff.utility.InputUtility;
 
 public class AccountsDaoImpl implements AccountDao {
 	String url = "jdbc:postgresql://criffbanking.cua8a0jy3iil.us-east-2.rds.amazonaws.com/criffbanking";
 	String user = "postgres";
 	String pw = "lost1soul";
 	private static Connection conn;
+	public static Account acct = new Account();
+	private static DecimalFormat df2 = new DecimalFormat("#,###.00");
 
 	public void connect() {
 		try{
@@ -56,10 +63,8 @@ public class AccountsDaoImpl implements AccountDao {
 	
 	
 	public void depositTo(int acct_id, double amt) {
-		connect();
-		
-		String query = "UPDATE account_table SET balence = balence + ? WHERE id = ?";
-		
+		connect();		
+		String query = "UPDATE account_table SET balence = balence + ? WHERE id = ?";	
 		try {
 			PreparedStatement s = conn.prepareStatement(query);
 			s.setDouble(1, amt);
@@ -68,14 +73,13 @@ public class AccountsDaoImpl implements AccountDao {
 			s.close();
 			
 		}catch(SQLException e) {
-			System.out.println("         ERROR: Account Number Not Found.");
+			InputUtility.displayHeader("         ERROR: Account Number Not Found.");
 		}
-		System.out.println("         DEPOSIT SUCCESSFUL!");
+		InputUtility.displayHeader("         DEPOSIT SUCCESSFUL!");
 	}
 	
 	public void withdrawFrom(int acct_id, double amt) {
 		connect();
-	
 		String query = "UPDATE account_table SET balence = balence - ? WHERE id = ?";
 		
 		try {
@@ -86,9 +90,9 @@ public class AccountsDaoImpl implements AccountDao {
 			s.close();
 			
 		}catch(SQLException e) {
-			System.out.println("         ERROR: Account Number Not Found.");
+			InputUtility.displayHeader("         ERROR: Account Number Not Found.");
 		}
-		System.out.println("         WITHDRAW SUCCESSFUL!");
+		InputUtility.displayHeader("         WITHDRAW SUCCESSFUL!");
 	}
 	
 	public void transferMoney(int acct_idFrom, int acct_idTo, double amt) {
@@ -114,11 +118,12 @@ public class AccountsDaoImpl implements AccountDao {
 			e.printStackTrace();
 		}
 		
-		System.out.println("         TRANSFER SUCCESSFUL!");
+		InputUtility.displayHeader("         TRANSFER SUCCESSFUL!");
 	}
 	
 	public void addUserToAcct(int acct_id, String newUserEmail) {
 		connect();
+		
 		String query = "INSERT INTO users_accounts (users_id, accounts_id) VALUES ((SELECT id FROM user_table WHERE email = ?), ?);";
 		//String query2 = "INSERT INTO users_accounts (users_id, accounts_id) VALUES (?,?)";
 		
@@ -129,9 +134,9 @@ public class AccountsDaoImpl implements AccountDao {
 			s.executeUpdate();
 			s.close();
 			
-			System.out.println("         USER ADDED SUCCESSFULLY!");
+			InputUtility.displayHeader("         USER ADDED SUCCESSFULLY! You Now Have A Joint Account.");
 		}catch(SQLException e) {
-			System.out.println("         ERROR: Username Or Email Not Found.");
+			InputUtility.displayHeader("         ERROR: Username Or Email Not Found.");
 		}
 	}
 	
@@ -186,5 +191,46 @@ public class AccountsDaoImpl implements AccountDao {
 			e.printStackTrace();
 		}
 		
-	}	   
+	}
+	
+	public List<Account> getAllAccounts(int acct_id) {
+		connect();
+
+		List<Account> accounts = null;
+		
+		String query = "select * from account_table";
+		
+		try {
+
+			
+			PreparedStatement s = conn.prepareStatement(query);
+			
+			accounts = new ArrayList<Account>();
+			
+			ResultSet resultSet = s.executeQuery();
+
+			while (resultSet.next()) {
+				accounts.add(
+						new Account(
+								resultSet.getInt(1),
+								resultSet.getString(2), 
+								resultSet.getString(3),
+								resultSet.getFloat(4),
+								resultSet.getBoolean(5)
+								
+						));	
+				
+				
+			}
+			s.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return accounts;
+		
+	}
+	
+	
+	
+	
 }

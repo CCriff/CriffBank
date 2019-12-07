@@ -30,7 +30,7 @@ public class Driver {
                 +"        " +  "|____/ \\__,_|_| |_|_|\\_\\_|_| |_|\\__, | |____/ \\__, |___/\\__\\___|_| |_| |_| \n"
                 +"        " +  "                                |___/         |___/             \n");
 
-        InputUtility.displayHeader("WELCOME TO THE CRIFF BANKING SYSTEM! PLEASE PRESS ENTER TO LOGIN OR CREAT A NEW ACCOUNT");
+        InputUtility.displayHeader("WELCOME TO THE CRIFF BANKING SYSTEM! PLEASE PRESS ENTER TO LOGIN OR CREATE A NEW ACCOUNT");
         Scanner scan = new Scanner(System.in);
         scan.nextLine();
         InputUtility.displayHeader("STARTING SYSTEM....");
