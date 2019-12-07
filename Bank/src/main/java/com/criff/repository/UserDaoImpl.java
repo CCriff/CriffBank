@@ -31,6 +31,7 @@ public class UserDaoImpl implements UserDao {
 		}
 	}
 	
+	@Override
 	public User insertUser(User user) {
 			connect();
 		
@@ -56,6 +57,7 @@ public class UserDaoImpl implements UserDao {
 			return user;
 	}
 	
+	@Override
 	public boolean getUserAccounts(User user, boolean hasAccts) {
 		connect();
 		
@@ -92,7 +94,7 @@ public class UserDaoImpl implements UserDao {
 		return hasAccts;
 	}
 	
-	
+	@Override
 	public User checkUser(User user, String email, String pwLogin) {
 		connect();
 				
@@ -139,7 +141,8 @@ public class UserDaoImpl implements UserDao {
 		}
 		return user;
 	}
-
+	
+	@Override
 	public List<User> getAllUsers(int user_id) {
 		connect();
 
@@ -174,6 +177,7 @@ public class UserDaoImpl implements UserDao {
 		
 	}
 	
+	@Override
 	public void EditUserAccountUsername(int acct_id, String email) {
 		connect();		
 		String query = "UPDATE user_table SET email = ? WHERE id = ?";	
@@ -190,6 +194,7 @@ public class UserDaoImpl implements UserDao {
 		InputUtility.displayHeader("         EDIT SUCCESSFUL!");
 	}
 	
+	@Override
 	public void EditUserAccountPassword(int acct_id, String pw_hash) {
 		connect();		
 		String query = "UPDATE user_table SET pw_hash = ? WHERE id = ?";	
@@ -205,5 +210,41 @@ public class UserDaoImpl implements UserDao {
 		}
 		InputUtility.displayHeader("         EDIT SUCCESSFUL!");
 	}
-	
+
+	@Override
+	public List<User> getSingleUser(int user_id) {
+		connect();
+
+		List<User> user = null;
+		
+		String query = "select * from user_table WHERE id = ?";
+		
+		try {
+
+			
+			PreparedStatement s = conn.prepareStatement(query);
+			
+			user = new ArrayList<User>();
+			s.setInt(1, user_id);
+			ResultSet resultSet = s.executeQuery();
+			
+			while (resultSet.next()) {
+				user.add(
+						new User(
+								resultSet.getInt(1),
+								resultSet.getString(2), 
+								resultSet.getString(3),
+								resultSet.getString(4),
+								resultSet.getString(5)
+								
+						));	
+				
+				
+			}
+			s.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return user;
+	}	
 }

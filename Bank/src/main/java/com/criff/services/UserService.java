@@ -3,9 +3,6 @@ package com.criff.services;
 import java.util.ArrayList;
 
 import org.mindrot.jbcrypt.BCrypt;
-
-import com.criff.main.AdminMenu;
-import com.criff.main.EmpMenu;
 import com.criff.models.User;
 import com.criff.repository.UserDaoImpl;
 import com.criff.utility.InputUtility;
@@ -13,8 +10,6 @@ import com.criff.utility.InputUtility;
 public class UserService {
 	private static EmployeeService empService = new EmployeeService();
 	private static UserService userService = new UserService();
-	private static AdminMenu adminMenu = new AdminMenu();
-	private static EmpMenu empMenu = new EmpMenu();
 	public static User user = new User();
 	private static UserDaoImpl userDao = new UserDaoImpl();
 	public static boolean newUser = false;

@@ -29,6 +29,7 @@ public class AccountsDaoImpl implements AccountDao {
 		}
 	}
 	
+	@Override
 	public Account createAcct(Account acct, int user_id) {
 		connect();
 		String query = "INSERT INTO account_table (acct_type, currency, balence, acct_status) " +
@@ -61,7 +62,7 @@ public class AccountsDaoImpl implements AccountDao {
 		return acct;
 	}
 	
-	
+	@Override
 	public void depositTo(int acct_id, double amt) {
 		connect();		
 		String query = "UPDATE account_table SET balence = balence + ? WHERE id = ?";	
@@ -78,6 +79,7 @@ public class AccountsDaoImpl implements AccountDao {
 		InputUtility.displayHeader("         DEPOSIT SUCCESSFUL!");
 	}
 	
+	@Override
 	public void withdrawFrom(int acct_id, double amt) {
 		connect();
 		String query = "UPDATE account_table SET balence = balence - ? WHERE id = ?";
@@ -95,6 +97,7 @@ public class AccountsDaoImpl implements AccountDao {
 		InputUtility.displayHeader("         WITHDRAW SUCCESSFUL!");
 	}
 	
+	@Override
 	public void transferMoney(int acct_idFrom, int acct_idTo, double amt) {
 		connect();
 	
@@ -121,6 +124,7 @@ public class AccountsDaoImpl implements AccountDao {
 		InputUtility.displayHeader("         TRANSFER SUCCESSFUL!");
 	}
 	
+	@Override
 	public void addUserToAcct(int acct_id, String newUserEmail) {
 		connect();
 		
@@ -140,6 +144,7 @@ public class AccountsDaoImpl implements AccountDao {
 		}
 	}
 	
+	@Override
 	public void deleteAccount(int acct_id, int user_id) {
 		connect();
 		
@@ -161,7 +166,8 @@ public class AccountsDaoImpl implements AccountDao {
 		}
 	}
 
-	public void approveAccount(int acct_id) {
+	@Override
+	public void approveAccount(int acct_id, boolean status) {
 		connect();
 		
 		String query = "update account_table set acct_status = true where id = ?";
@@ -176,7 +182,8 @@ public class AccountsDaoImpl implements AccountDao {
 		}
 		
 	}
-
+	
+	@Override
 	public void denyAccount(int acct_id) {
 		connect();
 		
@@ -193,6 +200,7 @@ public class AccountsDaoImpl implements AccountDao {
 		
 	}
 	
+	@Override
 	public List<Account> getAllAccounts(int acct_id) {
 		connect();
 
@@ -229,8 +237,87 @@ public class AccountsDaoImpl implements AccountDao {
 		return accounts;
 		
 	}
-	
-	
-	
-	
+
+	@Override
+	public boolean get_acct_status(int acct_id) {
+		connect();
+				
+		String query = "SELECT acct_status FROM account_table WHERE id = ?";
+		boolean acct_status = false;
+		
+		try {
+			PreparedStatement s = conn.prepareStatement(query);			
+			s.setInt(1, acct_id);			
+			ResultSet resultSet = s.executeQuery();
+			
+			
+			while (resultSet.next()) {
+				acct_status = resultSet.getBoolean(1);
+	        }
+			
+			s.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return acct_status;
+	}
+
+	@Override
+	public void change_account_status(int acct_id, boolean status) {
+		connect();
+		
+		Account account = null;
+		User user = null;
+		
+		String query = "UPDATE account_table SET acct_status = ? WHERE id = ?";
+		
+		try {
+			PreparedStatement s = conn.prepareStatement(query);
+			s.setBoolean(1, status);
+			s.setInt(2, acct_id);
+			s.executeUpdate();
+
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	public List<Account> getSingleAccount(int acct_id) {
+		connect();
+
+		List<Account> accounts = null;
+		
+		String query = "select * from account_table WHERE id = ?";
+		
+		try {
+
+			
+			PreparedStatement s = conn.prepareStatement(query);
+			
+			accounts = new ArrayList<Account>();
+			s.setInt(1, acct_id);
+			ResultSet resultSet = s.executeQuery();
+			
+			while (resultSet.next()) {
+				accounts.add(
+						new Account(
+								resultSet.getInt(1),
+								resultSet.getString(2), 
+								resultSet.getString(3),
+								resultSet.getFloat(4),
+								resultSet.getBoolean(5)
+								
+						));	
+				
+				
+			}
+			s.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return accounts;
+	}
+			
 }

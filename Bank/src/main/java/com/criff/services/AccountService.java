@@ -9,14 +9,13 @@ import com.criff.utility.InputUtility;
 
 public class AccountService {
 	private static UserDaoImpl userDao = new UserDaoImpl();
-	private static User user = new User();
 	private static Account acct = new Account();
 	private static AccountsDaoImpl acctDao = new AccountsDaoImpl();
 	private static UserService userService = new UserService();
-	private static AccountService acctService = new AccountService();
-	private static EmployeeService empService = new EmployeeService();
 
-
+	AccountsDaoImpl acct_Dao = new AccountsDaoImpl();
+	User users = new User();
+	
 	public static Account getAccount() {
 		return acct;
 	}
@@ -104,16 +103,19 @@ public class AccountService {
 		System.out.println("    	*******************************************");
 		System.out.println("                                                   ");
 		
-		
-		
 		System.out.print("         Enter Account To Deposit Into: "); // id for account
 		int acct_id = InputUtility.getIntChoice(100);
 		
+		if (acctDao.get_acct_status(acct_id) == true) {
+					
 		System.out.println();
 		System.out.print("         Enter Amount To Be Deposited: ");
 		double amt = InputUtility.getDoubleInput(500_000);
 		
 		acctDao.depositTo(acct_id, amt);
+		} else {
+			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+		}
 	}
 	
 	public void withdraw() {
@@ -126,18 +128,11 @@ public class AccountService {
 		System.out.println("    	*******************************************");
 		System.out.println("                                                   ");
 		
-		
-		
+				
 		System.out.print("         Enter Account To Withdraw From: "); // id for account
-		int acct_id = InputUtility.getIntChoice(100);
-		System.out.println();
-		
+		int acct_id = InputUtility.getIntChoice(100);		
 		boolean acctFound = userService.getAcctNumbers().contains(acct_id);
-		
-//		if (status == false) {
-//			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
-//			} else {
-		
+				
 		if(acctFound == false) {
 			do {
 				System.out.println("         ERROR: Please Enter A Correct Account Number!");
@@ -147,6 +142,8 @@ public class AccountService {
 				acctFound = userService.getAcctNumbers().contains(acct_id);
 			}while(acctFound == false);
 		}
+		
+		if (acctDao.get_acct_status(acct_id) == true) {
 		
 		System.out.print("         Enter Amount To Be Withdrawn: ");
 		double amt = InputUtility.getDoubleInput(100_000);
@@ -160,7 +157,9 @@ public class AccountService {
 		}  
 		
 		acctDao.withdrawFrom(acct_id, amt);
-		//}
+		} else {
+			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+		}
 	}
 	
 	public void transfer() {
@@ -177,13 +176,8 @@ public class AccountService {
 		
 		System.out.print("         Enter Account To Transfer From: "); // id for account
 		int acct_idFrom = InputUtility.getIntChoice(100);
-		System.out.println();
-		
+		System.out.println();		
 		boolean acctFound = userService.getAcctNumbers().contains(acct_idFrom);
-		
-//		if (acct.isAcctStatus() == false) {
-//			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
-//			} else {
 		
 		if(acctFound == false) {
 			do {
@@ -194,24 +188,20 @@ public class AccountService {
 				acctFound = userService.getAcctNumbers().contains(acct_idFrom);
 			}while(acctFound == false);
 		}
-		
+				
 		System.out.print("         Enter Account To Transfer To: "); // id for account
 		int acct_idTo = InputUtility.getIntChoice(100);
 		System.out.println();
 		
+		if (acctDao.get_acct_status(acct_idFrom) && (acctDao.get_acct_status(acct_idTo) == true)) {
+		
 		System.out.print("         Enter Amount To Be Transferred: ");
 		double amt = InputUtility.getDoubleInput(500_000);
 		
-//		double balance = acct.getBalance();
-//		
-//		if(amt  > balance) {
-//			InputUtility.displayHeader("Transaction Cannot Be Completed. You Have Insuffient Funds.");
-//			System.out.print("         Enter Amount To Be Transferred: ");
-//			amt = InputUtility.getDoubleInput(100_000);			
-//		}
-		
 		acctDao.transferMoney(acct_idFrom, acct_idTo, amt);
-			//}
+			} else {
+				InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+			}
 	}
 	
 	public void addUserToAccount() {
@@ -231,11 +221,7 @@ public class AccountService {
 		System.out.println();
 		
 		boolean acctFound = userService.getAcctNumbers().contains(acct_id);
-		
-//		if (acct.isAcctStatus() == false) {
-//			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
-//			} else {
-		
+				
 		if(acctFound == false) {
 			do {
 				System.out.println("         ERROR: Please Enter A Correct Account Number!");
@@ -246,11 +232,15 @@ public class AccountService {
 			}while(acctFound == false);
 		}
 		
+		if (acctDao.get_acct_status(acct_id) == true) {
+		
 		System.out.print("         Enter Username Or Email Of New User: "); // id for account
 		String newUserEmail = InputUtility.getStringInput(100);
 		
 		acctDao.addUserToAcct(acct_id, newUserEmail);
-		//}
+		} else {
+			InputUtility.displayHeader("New Accounts Need To Be Approved Before Use. Please See Bank Teller If Account Not Approved/Denied in 24 Hours.");
+		}
 	} 
 	
 	public void deleteAcct() {
@@ -269,7 +259,8 @@ public class AccountService {
 		int acct_id = InputUtility.getIntChoice(100);
 		acctDao.deleteAccount(acct_id, userService.getUserId());
 		
-		InputUtility.displayHeader(acct_id + " Has Been Deleted!");
+		InputUtility.displayHeader("Account With Account #: " + acct_id + " Has Been Closed! If You Had Funds In This Account,"
+								 + " A Paper Check Will Be Mailed Out To You.");
 	}
 	
 	public double exchangeCurrency(String startCurrency, double startAmount, String newCurrency) {
@@ -289,9 +280,15 @@ public class AccountService {
 		
 		System.out.print("         Enter Account To Approve: "); // id for account
 		int acct_id = InputUtility.getIntChoice(100);
-		acctDao.approveAccount(acct_id);
 		
-		InputUtility.displayHeader("Your Account Has Been Approved And Is Ready For Immediate Use!");
+		if (acctDao.get_acct_status(acct_id) != true) {
+		
+		acctDao.approveAccount(acct_id, true);
+		
+		InputUtility.displayHeader("Account With Account #: " + acct_id + " Has Been Approved And Is Ready For Immediate Use!");
+		} else {
+			InputUtility.displayHeader("This Account Is Already On The Approved List!");
+		}
 	}
 
 	public void deny() {
@@ -307,8 +304,14 @@ public class AccountService {
 		System.out.print("         Enter Account To Deny: "); // id for account
 		int acct_id = InputUtility.getIntChoice(100);
 		
+		if (acctDao.get_acct_status(acct_id) != false) {
 		
-		InputUtility.displayHeader("Sorry, Your Account Has Been Denied Or Put On A Freeze! Please Contact Management For Further Information!");
+		acctDao.denyAccount(acct_id);
+		InputUtility.displayHeader("Account With Account #: " + acct_id + " Has Been Denied Or"
+				                 + " Put On A Freeze! Please Contact Management For Further Information!");
+		} else {
+			InputUtility.displayHeader("This Account Is Already On The Denied List!");
+		}
 	}
 
 	public void viewSingleAccount() {
@@ -321,10 +324,10 @@ public class AccountService {
 		System.out.println("    	*******************************************");
 		System.out.println("                                                   ");
 		
-		System.out.print("         Enter Account To View: "); // id for account
+		System.out.print("         Enter Account ID To View: "); // id for account
 		int acct_id = InputUtility.getIntChoice(100);
 
-		System.out.println("");
+		System.out.println(acctDao.getSingleAccount(acct_id));
 	}
 
 	public void viewAllAccounts() {
@@ -341,6 +344,22 @@ public class AccountService {
 		
 		System.out.println(acctDao.getAllAccounts(acct_id));
 				
+	}
+	
+	public void viewSingleUser() {
+		System.out.println("                                                   ");
+		System.out.println("                                                   ");
+		System.out.println("    	*******************************************");
+		System.out.println("        *        CRIFF  BANKING  SYSTEM           *");
+		System.out.println("        *                                         *");
+		System.out.println("        *       VIEW USER ACCOUNT INFO            *");
+		System.out.println("    	*******************************************");
+		System.out.println("                                                   ");
+		
+		System.out.print("         Enter User ID To View: "); // id for account
+		int user_id = InputUtility.getIntChoice(100);
+
+		System.out.println(userDao.getSingleUser(user_id));
 	}
 	
 	public void viewAllUsers() {
@@ -375,18 +394,18 @@ public class AccountService {
 		System.out.print("         What Do You Want To Edit: (1) Username/Email (2) Password ");
 		int edit = InputUtility.getIntChoice(2);
 		if (edit == 1) {
-			System.out.println("What Do You Want To Change Your Uername/Email To:");
+			System.out.println("         What Do You Want To Change Your Uername/Email To:");
 			String changeue = InputUtility.getStringInput(30);
 			userService.setUserEmail(changeue);
 			
-			System.out.println("Your Username/Email Has Been Changed.");
+			System.out.println("         Your Username/Email Has Been Changed To " + changeue + " .");
 			userDao.EditUserAccountUsername(edit, changeue);
 		} else if (edit == 2) {
-			System.out.println("What Do You Want To Change Your Password To:");
+			System.out.println("         What Do You Want To Change Your Password To:");
 			String changepw = InputUtility.getStringInput(30);
 			userService.setUserEmail(changepw);
 			
-			System.out.println("Your Password Has Been Changed.");
+			System.out.println("         Your Password Has Been Changed To " + changepw + " .");
 			userDao.EditUserAccountPassword(edit, changepw);
 		} else {
 			InputUtility.displayHeader("Please Enter (1) to Change Your Username Or Email Enter (2) To Change Your Password.");
