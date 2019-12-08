@@ -90,7 +90,7 @@ public class UserService {
 		System.out.print("         Please Enter An Username Or Email: ");
 		user.setEmail(InputUtility.getStringInput(30));
 		
-		if (user.getEmail().contains(getUserEmail())) {
+		if (this.getUserEmail().equals(user.getEmail())) {
 			
 			InputUtility.displayHeader("Someone With This Uername Or Email Already Exists. Please Enter Unique Username Or Email: ");
 			

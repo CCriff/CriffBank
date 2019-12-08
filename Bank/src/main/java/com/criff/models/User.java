@@ -101,11 +101,6 @@ public class User {
 		return true;
 	}
 	
-	public User() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
 	public User(int id, String firstName, String lastName, String email, String pass_hash) {
 		super();
 		this.id = id;
@@ -114,4 +109,11 @@ public class User {
 		this.email = email;
 		this.pass_hash = pass_hash;
 	}
+	
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
 }

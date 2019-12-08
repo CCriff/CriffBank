@@ -69,6 +69,11 @@ public class EmployeeService {
 	}
 		
 	public void employeeLogin() {
+		String admin_us = "admin";
+		String admin_pw = "admin";
+		String emp_us = "emp";
+		String emp_pw = "emp";
+		
 		System.out.println("                                                   ");
 		System.out.println("                                                   ");
 		System.out.println("    	*******************************************");
@@ -83,11 +88,16 @@ public class EmployeeService {
 		
 		InputUtility.displayHeader("         Please Enter Your Password: ");
 		String pw = InputUtility.getStringInput(30);
-				
-		System.out.println();
-		InputUtility.displayHeader("         Logging Into Your Account . . .");
 		
-		
+		if(email.equalsIgnoreCase(admin_us) && pw.equalsIgnoreCase(admin_pw)) {
+			System.out.println();
+			InputUtility.displayHeader("         Logging Into Your Account . . .");
+		} else {
+			InputUtility.displayHeader("         Invalid Crendentials. Please Try Again.");
+			
+			
+		}
+						
 	}
 	
 	public void employeelogout() {

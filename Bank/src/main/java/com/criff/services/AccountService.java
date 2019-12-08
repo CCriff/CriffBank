@@ -69,7 +69,7 @@ public class AccountService {
 		acct.setCurrency(CurrencyMenu.process());
 		acct.setType("CHECKING");
 
-		// Create account in DB and add returned id(unique account number) to user accounts array
+		
 		acct = acctDao.createAcct(acct, userService.getUserId());
 		UserService.newUser = false;
 		acct.setAcctStatus(false);
@@ -83,7 +83,7 @@ public class AccountService {
 		acct.setCurrency(CurrencyMenu.process());
 		acct.setType("SAVINGS");
 
-		// Create account in DB and add returned id(unique account number) to user accounts array
+		
 		acct = acctDao.createAcct(acct, userService.getUserId());
 		UserService.newUser = false;
 		acct.setAcctStatus(false);
